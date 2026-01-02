@@ -1,14 +1,11 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Button } from "@workspace/ui/components/ui/button";
 import { MoveRight, PlayCircle } from "lucide-react";
-import { useState, useMemo, useEffect } from "react";
-import Link from "next/link";
+import { Button } from "@workspace/ui/components/ui/button";
 
-type Props = {};
-
-export const HomePage: React.FC<Props> = () => {
+export const Hero = () => {
   const [titleNumber, setTitleNumber] = useState(0);
 
   const titles = useMemo(
@@ -72,12 +69,6 @@ export const HomePage: React.FC<Props> = () => {
             <Button size="lg" className="gap-4" variant="outline">
               Watch a quick demo <PlayCircle className="h-4 w-4" />
             </Button>
-
-            <Link href={"/auth/sign-in"}>
-              <Button size="lg" className="gap-4 bg-orange-600">
-                Get started with Tasklow <MoveRight className="h-4 w-4" />
-              </Button>
-            </Link>
           </div>
         </div>
       </div>

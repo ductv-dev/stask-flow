@@ -1,7 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent } from "@workspace/ui/components/card";
-
 import {
   Field,
   FieldDescription,
@@ -10,30 +12,91 @@ import {
   FieldSeparator,
 } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
-import loginBaner from "../images/login-baner.jpg";
 
 type Props = {
   className?: string;
-  action: (formData: FormData) => Promise<any>;
-  loginWithGoogleAction: () => Promise<any>;
+  // Action nhận vào từ cha (AuthSignUp)
+  action?: (formData: FormData) => Promise<any>;
 };
-export const LoginForm: React.FC<Props> = ({
-  className,
-  action,
-  loginWithGoogleAction,
-}) => {
+
+export const SignUpForm: React.FC<Props> = ({ className, action }) => {
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Hàm xử lý khi nhấn Submit
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Chặn reload trang
+    setError(null);
+    setIsLoading(true);
+
+    const formData = new FormData(event.currentTarget);
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirm-password") as string;
+    const fullName = formData.get("fullName") as string;
+
+    // --- 1. Client-side Validation (Kiểm tra tại trình duyệt) ---
+
+    // Kiểm tra mật khẩu khớp nhau
+    if (password !== confirmPassword) {
+      setError("Mật khẩu xác nhận không khớp!");
+      setIsLoading(false);
+      return;
+    }
+
+    // Kiểm tra độ dài mật khẩu
+    if (password.length < 6) {
+      setError("Mật khẩu phải có ít nhất 6 ký tự.");
+      setIsLoading(false);
+      return;
+    }
+
+    // Kiểm tra tên
+    if (!fullName || fullName.trim().length < 2) {
+      setError("Vui lòng nhập họ tên hợp lệ.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (action) {
+      try {
+        const result = await action(formData);
+
+        if (result?.error) {
+          setError(result.error);
+        } else {
+        }
+      } catch (err) {
+        setError("Đã có lỗi xảy ra. Vui lòng thử lại.");
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      // Trường hợp không truyền action (lúc dev)
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" action={action}>
+          {/* Thay action={action} bằng onSubmit={handleSubmit} */}
+          <form className="p-6 md:p-8" onSubmit={handleSubmit}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Welcome back</h1>
+                <h1 className="text-2xl font-bold">Welcome</h1>
                 <p className="text-muted-foreground text-balance">
-                  Login to your Acme Inc account
+                  Create your account
                 </p>
               </div>
+
+              {/* Hiển thị lỗi nếu có */}
+              {error && (
+                <div className="p-3 text-sm font-medium text-red-500 bg-red-50 border border-red-200 rounded-md text-center">
+                  {error}
+                </div>
+              )}
+
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
@@ -45,19 +108,39 @@ export const LoginForm: React.FC<Props> = ({
                 />
               </Field>
               <Field>
+                <FieldLabel htmlFor="fullName">Full name</FieldLabel>
+                <Input
+                  id="fullName"
+                  name="fullName"
+                  type="text" // Đã sửa từ type="fullName" thành text
+                  placeholder="Full name"
+                  required
+                />
+              </Field>
+              <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-2 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
                 </div>
                 <Input id="password" name="password" type="password" required />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <div className="flex items-center">
+                  <FieldLabel htmlFor="confirm-password">
+                    Confirm Password
+                  </FieldLabel>
+                </div>
+                <Input
+                  id="confirm-password"
+                  name="confirm-password"
+                  type="password"
+                  required
+                />
+              </Field>
+              <Field>
+                {/* Button hiển thị loading state */}
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? "Creating account..." : "Sign Up"}
+                </Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
@@ -72,11 +155,7 @@ export const LoginForm: React.FC<Props> = ({
                   </svg>
                   <span className="sr-only">Login with Apple</span>
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => loginWithGoogleAction()}
-                  type="button"
-                >
+                <Button variant="outline" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
                       d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
@@ -96,7 +175,7 @@ export const LoginForm: React.FC<Props> = ({
                 </Button>
               </Field>
               <FieldDescription className="text-center">
-                Don&apos;t have an account? <a href="/auth/sign-up">Sign up</a>
+                You have an account? <a href="/auth/sign-in">Sign in</a>
               </FieldDescription>
             </FieldGroup>
           </form>
