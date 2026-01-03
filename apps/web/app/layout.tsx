@@ -28,7 +28,7 @@ export default function RootLayout({
         <Providers>
           <div className="bg-gray-200 mx-auto">
             <AppToaster />
-            <Header />
+
             {children}
           </div>
         </Providers>
