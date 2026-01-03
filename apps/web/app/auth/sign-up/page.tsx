@@ -1,3 +1,3 @@
-import { AuthSignUp } from "@/containers/auth-sign-up/page";
+import { AuthSignUp } from "@/containers/client/auth-sign-up/page";
 
 export default AuthSignUp;

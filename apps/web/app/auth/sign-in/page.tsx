@@ -1,3 +1,3 @@
-import { AuthSignIn } from "@/containers/auth-sign-in/page";
+import { AuthSignIn } from "@/containers/client/auth-sign-in/page";
 
 export default AuthSignIn;

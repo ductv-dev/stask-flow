@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
 import { AppToaster } from "@workspace/ui/components/toaster";
-import { Header } from "@/components/layouts/client/headers";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -26,7 +25,7 @@ export default function RootLayout({
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
         <Providers>
-          <div className="bg-gray-200 mx-auto">
+          <div className=" mx-auto">
             <AppToaster />
 
             {children}

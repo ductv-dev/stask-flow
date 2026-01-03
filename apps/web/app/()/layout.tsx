@@ -1,14 +1,14 @@
-import { Header } from "@/components/layouts/client/headers";
+import { HeaderClient } from "@/components/layouts/client/header";
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <>
-      <Header />
-      {children}
+      <HeaderClient />
+      <div className="flex-1">{children}</div>
     </>
   );
 }
