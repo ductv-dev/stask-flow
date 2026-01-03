@@ -45,10 +45,14 @@ function ElegantShape({
             "absolute inset-0 rounded-full",
             "bg-gradient-to-r to-transparent",
             gradient,
-            "backdrop-blur-[2px] border-2 border-white/[0.15]",
-            "shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]",
+            "backdrop-blur-[2px]",
+            // THAY ĐỔI: Viền đen nhạt ở Light mode, Viền trắng ở Dark mode
+            "border-2 border-black/[0.1] dark:border-white/[0.15]",
+            // THAY ĐỔI: Bóng đen ở Light mode, Bóng trắng glow ở Dark mode
+            "shadow-[0_8px_32px_0_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]",
             "after:absolute after:inset-0 after:rounded-full",
-            "after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_70%)]"
+            // THAY ĐỔI: Highlight bề mặt (đổi màu highlight nhẹ cho phù hợp nền)
+            "after:bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.05),transparent_70%)] dark:after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_70%)]"
           )}
         />
       </motion.div>
@@ -66,11 +70,13 @@ export function HeroGeometricBackground({
   return (
     <div
       className={cn(
-        "relative min-h-screen w-full overflow-hidden bg-[#030303]",
+        // THAY ĐỔI: Nền trắng mặc định, nền đen khi dark mode
+        "relative min-h-screen w-full overflow-hidden bg-white dark:bg-[#030303]",
         className
       )}
     >
       {/* glow layer */}
+      {/* Giữ nguyên màu glow nhưng giảm nhẹ opacity nếu cần, hoặc để mặc định vì nó khá trong suốt */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
 
       {/* shapes */}
@@ -121,7 +127,8 @@ export function HeroGeometricBackground({
       <div className="relative z-10">{children}</div>
 
       {/* vignette */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/80 pointer-events-none" />
+      {/* THAY ĐỔI: Gradient che mờ chuyển từ Trắng->Trong suốt->Trắng (Light) và Đen->Trong suốt->Đen (Dark) */}
+      <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/80 dark:from-[#030303] dark:via-transparent dark:to-[#030303]/80 pointer-events-none" />
     </div>
   );
 }

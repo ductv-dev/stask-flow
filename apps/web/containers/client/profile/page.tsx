@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -68,27 +69,65 @@ export const ProfileClient: React.FC<Props> = () => {
       </header>
       <div className="flex flex-1  p-4 pt-0">
         {user && (
-          <div>
-            <h1>Photo</h1>
-            <div className="flex gap-2.5">
-              <img
-                src={user.avatar}
-                alt={user.name}
-                className="h-15 w-15 rounded-full object-cover"
-              />
-              <Button variant={"outline"}>Change Photo</Button>
-              <Button
-                variant={"outline"}
-                className="text-red-500 border-red-500 hover:bg-red-500/10 hover:text-red-600"
-              >
-                Remove Photo
+          <div className="flex flex-col gap-6 w-full ">
+            <div className="flex flex-col gap-2">
+              <label className="font-bold text-sm">Photo</label>
+              <div className="flex items-center gap-4">
+                <img
+                  src={user?.avatar || "https://github.com/shadcn.png"}
+                  alt={user?.name}
+                  className="h-16 w-16 rounded-full object-cover border border-slate-200"
+                />
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm">
+                    Change Photo
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-600 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+                  >
+                    Remove Photo
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="font-bold text-sm">Display Name</label>
+              <Input defaultValue={user?.name} className="max-w-md" />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="font-bold text-sm">Email</label>
+              <div className="flex  max-w-md   text-sm ">{user?.email}</div>
+              <Button variant="outline" className="max-w-md ">
+                Change Email
               </Button>
             </div>
 
-            <h1>Name</h1>
-            <Input value={user.name} />
-            <h1>Email</h1>
-            <p>{user.email}</p>
+            <div className="flex flex-col gap-2">
+              <label className="font-bold text-sm">Password</label>
+              <Button variant="outline" className="max-w-md ">
+                Change Password
+              </Button>
+            </div>
+            <hr />
+            <div className="flex flex-col gap-2">
+              <label className="font-bold text-sm text-red-600">
+                Delete Account
+              </label>
+              <p className="text-sm text-muted-foreground max-w-md">
+                Once you delete your account, there is no going back. Please be
+                certain.
+              </p>
+              <Button
+                variant="outline"
+                className="max-w-md text-red-600 border-red-200 hover:bg-red-50 hover:border-red-600 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+              >
+                Delete Account
+              </Button>
+            </div>
           </div>
         )}
       </div>
